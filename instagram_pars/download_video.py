@@ -10,7 +10,7 @@ logger.add("log/log.log")
 
 def here_we_download(all_links, folder, filename):
     """
-    Cкачивание видео из инстаграма по ссылкам
+    Cкачивание видео из instagram по ссылкам
     :argument all_links: ссылки на видео
     :argument folder: путь до папки
     :argument filename: имя файла
@@ -21,7 +21,7 @@ def here_we_download(all_links, folder, filename):
 
 def download_from_instagram(link, folder, filename):
     """
-    Cкачивание видео из инстаграма по ссылке
+    Cкачивание видео из instagram по ссылке
     :argument link: ссылка на видео
     :argument folder: путь до папки
     :argument filename: имя файла
