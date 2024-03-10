@@ -6,3 +6,4 @@ selenium-wire
 packaging
 setuptools
 beautifulsoup4
+lxml
