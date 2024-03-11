@@ -34,5 +34,14 @@ def removing_duplicates_from_the_database(cursor, conn) -> None:
     conn.close()  # Закрываем соединение с базой данных
 
 
+def get_instagram_posts():
+    """Получение постов из базы данных"""
+    conn = sqlite3.connect('instagram_posts.db')  # Подключаемся к базе данных SQLite
+    cursor = conn.cursor()  # Создаем курсор
+    cursor.execute('SELECT post_url FROM posts')
+    all_posts = cursor.fetchall()
+    return all_posts
+
+
 if __name__ == '__main__':
     database_for_instagram_posts()
