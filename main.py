@@ -17,6 +17,8 @@ from seleniumwire import webdriver
 from instagram_pars.authorization import authorization_instagram, authorization_instagram_mobile
 from instagram_pars.download_video import download_from_instagram
 from instagram_pars.parsin_comments import download_comments
+from instagram_pars.parsing_number_likes import parsing_number_likes
+from instagram_pars.parsing_post_descriptions import parsing_post_descriptions
 from instagram_pars.parsing_publication_date import parsing_publication_date
 from services.database import database_for_instagram_posts, removing_duplicates_from_the_database, get_instagram_posts
 from services.working_with_files import download_image
@@ -32,10 +34,10 @@ logger.add("log/log.log")
 2. Время поста ✔️
 3. День недели поста ✔️
 5. Формат поста
-6. Ссылка на пост в Instagram
-7. Количество лайков
+6. Ссылка на пост в Instagram ✔️
+7. Количество лайков ✔️
 8. Количество (просмотров)
-9. Количество комментариев
+9. Количество комментариев ✔️
 10. Количество репостов
 
 Данные в Google Sheets
@@ -122,94 +124,48 @@ def parsing_posts_from_a_page() -> None:
 
 
 def download_posts_from_the_page(browser) -> None:
-    video_src = (
-        '/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[1]/div/div/div/div/div/div/div/div/div/div/div/video')  # Видео пост
-    img_src = (
-        "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[1]/div/div/div/div/div/div/div[1]/div[1]")  # Пост изображение
-
     logger.info('Запуск скрипта по скачиванию постов')
     all_posts = get_instagram_posts()  # Запускаем скрипт для скачивания постов из базы данных.
     for post in all_posts:
         url = post[0]  # Extract the string from the tuple
         logger.info(f'Скачиваем пост: {url}')
-        amount_comments = download_comments(browser, url)  # Запускаем скрипт для скачивания комментариев
         browser.get(url)  # Перейти на страницу поста
-
+        display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса режима ожидания
+        amount_comments = download_comments(browser, url)  # Запускаем скрипт для скачивания комментариев
         date_value, formatted_date, formatted_time, day_of_week = parsing_publication_date(browser)
-
+        likes_count = parsing_number_likes(browser)  # Получаем количество лайков
+        description_text = parsing_post_descriptions(browser)  # Получаем описание поста
         folder_name = sanitize_folder_name(date_value)  # Преобразовываем в формат для имени папки
-        display_progress_bar(time_1=1, time_2=3)  # Выводим прогресс бар для процесса режима ожидания
         folder_path = f'downloaded_content/{folder_name}/'  # Проверяем наличие папки
         os.makedirs(folder_path, exist_ok=True)
-        time.sleep(3)
-        likes_element = browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div[3]/div/div[1]/section/div/div/span/a/span/span")
-        likes_count = likes_element.text
-        logger.info(f'Количество лайков: {likes_count}')
-        time.sleep(3)
         try:
-            # Получаем описание поста.
-            description_element = browser.find_element(By.XPATH,
-                                                       "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/"
-                                                       "div[2]/section/main/div/div[1]/div/div[2]/div/div[2]/"
-                                                       "div/div[1]/div/div[2]/div/span/div/span")
-            description_text = description_element.text
-            logger.info(description_text)
-
-            display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса режима ожидания
-            try:
-                browser.find_element(By.XPATH, video_src)
-                logger.info('Видео')
-                download_from_instagram(url, folder_path, f'{folder_name}.mp4')
-            except NoSuchElementException:  # Если видео нет, то скачиваем картинку
-                browser.find_element(By.XPATH, img_src)
-                logger.info('Изображение')
-                html = browser.page_source  # Получаем html код страницы
-                soup = bs4.BeautifulSoup(html, 'lxml')
-                img_url = soup.select('._aagv  img')[0].get('src')
-                logger.info(img_url)
-                download_image(url=img_url, folder=folder_path, filename=f'{folder_name}.jpg')
-                logger.info(f'Скачивание изображения: {img_url}')
-                for i in range(1, 7):  # Download next two images
-                    button_xpath = "//button[@aria-label='Далее']"
-                    if browser.find_elements(By.XPATH, button_xpath):
-                        browser.find_element(By.XPATH, button_xpath).click()
-                        time.sleep(2)
-                        posts = browser.find_element(By.XPATH, img_src).get_attribute('src')
-                        time.sleep(3)
-                        download_image(posts, folder_path, f'{folder_name}_next{i - 1}.jpg')
-            logger.info("Выключение браузера через 200 сек.")
-            display_progress_bar(time_1=1, time_2=2)  # Выводим прогресс бар для процесса режима ожидания
-        except NoSuchElementException:
-            description_text = ''
-
-            display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса режима ожидания
-            try:
-                browser.find_element(By.XPATH, video_src)
-                logger.info('Видео')
-                download_from_instagram(url, folder_path, f'{folder_name}.mp4')
-            except NoSuchElementException:  # Если видео нет, то скачиваем картинку
-                browser.find_element(By.XPATH, img_src)
-                logger.info('Изображение')
-                html = browser.page_source  # Получаем html код страницы
-                soup = bs4.BeautifulSoup(html, 'lxml')
-                img_url = soup.select('._aagv  img')[0].get('src')
-                logger.info(img_url)
-                download_image(url=img_url, folder=folder_path, filename=f'{folder_name}.jpg')
-                logger.info(f'Скачивание изображения: {img_url}')
-                for i in range(1, 7):  # Download next two images
-                    button_xpath = "//button[@aria-label='Далее']"
-                    if browser.find_elements(By.XPATH, button_xpath):
-                        browser.find_element(By.XPATH, button_xpath).click()
-                        display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса ожидания
-                        img_src = ('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/'
-                                   'div[1]/div/div[1]/div/div/div/div/div/div/div[1]/div[2]/div/div/div/ul/li[3]/'
-                                   'div/div/div/div/div[1]/img')
-                        posts = browser.find_element(By.XPATH, img_src).get_attribute('src')
-                        logger.info(posts)
-                        time.sleep(3)
-                        download_image(posts, folder_path, f'{folder_name}_next{i - 1}.jpg')
-            logger.info("Выключение браузера через 200 сек.")
-            display_progress_bar(time_1=1, time_2=2)  # Выводим прогресс бар для процесса режима ожидания
+            video_src = ('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/'
+                         'div[1]/div/div/div/div/div/div/div/div/div/div/div/video')  # Видео пост
+            browser.find_element(By.XPATH, video_src)
+            logger.info('Видео')
+            download_from_instagram(url, folder_path, f'{folder_name}.mp4')
+        except NoSuchElementException:  # Если видео нет, то скачиваем картинку
+            img_src = ("/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div[2]/"
+                       "div/div/div/div/div/div[1]")  # Пост изображение
+            browser.find_element(By.XPATH, img_src)
+            logger.info('Изображение')
+            html = browser.page_source  # Получаем html код страницы
+            soup = bs4.BeautifulSoup(html, 'lxml')
+            img_url = soup.select('._aagv  img')[0].get('src')
+            logger.info(img_url)
+            download_image(url=img_url, folder=folder_path, filename=f'{folder_name}.jpg')
+            logger.info(f'Скачивание изображения: {img_url}')
+            for i in range(1, 7):  # Download next two images
+                button_xpath = "//button[@aria-label='Далее']"
+                if browser.find_elements(By.XPATH, button_xpath):
+                    browser.find_element(By.XPATH, button_xpath).click()
+                    img_srcs = ('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/'
+                               'div[2]/div/div/div/div/div[1]/div[2]/div/div/div/ul/li[2]/div/div/div/div/div[1]/img')
+                    display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса режима ожидания
+                    posts = browser.find_element(By.XPATH, img_srcs).get_attribute('src')
+                    download_image(posts, folder_path, f'{folder_name}_next{i - 1}.jpg')
+        logger.info("Выключение браузера через 200 сек.")
+        display_progress_bar(time_1=1, time_2=2)  # Выводим прогресс бар для процесса режима ожидания
 
         # Исправленный код:
         post_info = {
@@ -218,7 +174,9 @@ def download_posts_from_the_page(browser) -> None:
             "День недели": day_of_week,
             "Количество лайков": likes_count,
             "Описание поста": description_text,
-            "Количество комментариев": amount_comments}
+            "Количество комментариев": amount_comments,
+            "Ссылка на пост": url,
+        }
 
         logger.info(f'Информация о посте: {post_info}')
         writing_data_to_json_file(folder_path, folder_name, post_info)  # Записываем информацию в файл

@@ -5,6 +5,14 @@ from selenium.webdriver.common.by import By
 
 
 def parsing_publication_date(browser):
+    """
+    Эта функция анализирует дату публикации поста и возвращает дату публикации в формате: 'YYYY-MM-DD'.
+    :param browser: браузер
+    :return: date_value - дата публикации,
+             formatted_date - форматированная дата,
+             formatted_time - форматированная время,
+             day_of_week - день недели
+    """
     posts_data = browser.find_element(By.CLASS_NAME,
                                       'x1p4m5qa')  # Получаем дату публикации поста (дата публикации)
     date_value = posts_data.get_attribute("datetime")  # Получаем значение атрибута datetime
