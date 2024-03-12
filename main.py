@@ -28,9 +28,9 @@ logger.add("log/log.log")
 Парсинг Instagram
 
 Данные:
-1. Дата поста
-2. Время поста
-3. День недели поста
+1. Дата поста ✔️
+2. Время поста ✔️
+3. День недели поста ✔️
 5. Формат поста
 6. Ссылка на пост в Instagram
 7. Количество лайков
@@ -138,14 +138,11 @@ def download_posts_from_the_page(browser) -> None:
         date_value, formatted_date, formatted_time, day_of_week = parsing_publication_date(browser)
 
         folder_name = sanitize_folder_name(date_value)  # Преобразовываем в формат для имени папки
-        display_progress_bar(time_1=100, time_2=300)  # Выводим прогресс бар для процесса режима ожидания
+        display_progress_bar(time_1=1, time_2=3)  # Выводим прогресс бар для процесса режима ожидания
         folder_path = f'downloaded_content/{folder_name}/'  # Проверяем наличие папки
         os.makedirs(folder_path, exist_ok=True)
         time.sleep(3)
-        likes_element = browser.find_element(By.XPATH,
-                                             "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/"
-                                             "section/main/div/div[1]/div/div[2]/div/div[3]/section/div/div/"
-                                             "span/a/span/span")
+        likes_element = browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div[3]/div/div[1]/section/div/div/span/a/span/span")
         likes_count = likes_element.text
         logger.info(f'Количество лайков: {likes_count}')
         time.sleep(3)
@@ -157,12 +154,7 @@ def download_posts_from_the_page(browser) -> None:
                                                        "div/div[1]/div/div[2]/div/span/div/span")
             description_text = description_element.text
             logger.info(description_text)
-            # Исправленный код:
-            post_info = {"Дата публикации": date_value, "Количество лайков": likes_count,
-                         "Описание поста": description_text, "Количество комментариев": amount_comments}
 
-            logger.info(f'Информация о посте: {post_info}')
-            writing_data_to_json_file(folder_path, folder_name, post_info)  # Записываем информацию в файл
             display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса режима ожидания
             try:
                 browser.find_element(By.XPATH, video_src)
@@ -189,11 +181,7 @@ def download_posts_from_the_page(browser) -> None:
             display_progress_bar(time_1=1, time_2=2)  # Выводим прогресс бар для процесса режима ожидания
         except NoSuchElementException:
             description_text = ''
-            # Исправленный код:
-            post_info = {"Дата публикации": date_value, "Количество лайков": likes_count,
-                         "Описание поста": description_text, "Количество комментариев": amount_comments}
-            logger.info(f'Информация о посте: {post_info}')
-            writing_data_to_json_file(folder_path, folder_name, post_info)  # Записываем информацию в файл
+
             display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса режима ожидания
             try:
                 browser.find_element(By.XPATH, video_src)
@@ -222,6 +210,18 @@ def download_posts_from_the_page(browser) -> None:
                         download_image(posts, folder_path, f'{folder_name}_next{i - 1}.jpg')
             logger.info("Выключение браузера через 200 сек.")
             display_progress_bar(time_1=1, time_2=2)  # Выводим прогресс бар для процесса режима ожидания
+
+        # Исправленный код:
+        post_info = {
+            "Дата поста": formatted_date,
+            "Время поста": formatted_time,
+            "День недели": day_of_week,
+            "Количество лайков": likes_count,
+            "Описание поста": description_text,
+            "Количество комментариев": amount_comments}
+
+        logger.info(f'Информация о посте: {post_info}')
+        writing_data_to_json_file(folder_path, folder_name, post_info)  # Записываем информацию в файл
 
 
 def main() -> None:
