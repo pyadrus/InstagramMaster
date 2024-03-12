@@ -17,6 +17,7 @@ from seleniumwire import webdriver
 from instagram_pars.authorization import authorization_instagram, authorization_instagram_mobile
 from instagram_pars.download_video import download_from_instagram
 from instagram_pars.parsin_comments import download_comments
+from instagram_pars.parsing_publication_date import parsing_publication_date
 from services.database import database_for_instagram_posts, removing_duplicates_from_the_database, get_instagram_posts
 from services.working_with_files import download_image
 from system.config import proxy_options
@@ -133,12 +134,11 @@ def download_posts_from_the_page(browser) -> None:
         logger.info(f'Скачиваем пост: {url}')
         amount_comments = download_comments(browser, url)  # Запускаем скрипт для скачивания комментариев
         browser.get(url)  # Перейти на страницу поста
-        display_progress_bar(time_1=1, time_2=3)  # Выводим прогресс бар для процесса режима ожидания
-        posts_data = browser.find_element(By.CLASS_NAME,
-                                          'x1p4m5qa')  # Получаем дату публикации поста (дата публикации)
-        date_value = posts_data.get_attribute("datetime")  # Получаем значение атрибута datetime
+
+        date_value, formatted_date, formatted_time, day_of_week = parsing_publication_date(browser)
+
         folder_name = sanitize_folder_name(date_value)  # Преобразовываем в формат для имени папки
-        logger.info(f'Дата публикации поста: {date_value}')  # Выводим значение даты
+        display_progress_bar(time_1=100, time_2=300)  # Выводим прогресс бар для процесса режима ожидания
         folder_path = f'downloaded_content/{folder_name}/'  # Проверяем наличие папки
         os.makedirs(folder_path, exist_ok=True)
         time.sleep(3)
@@ -192,7 +192,6 @@ def download_posts_from_the_page(browser) -> None:
             # Исправленный код:
             post_info = {"Дата публикации": date_value, "Количество лайков": likes_count,
                          "Описание поста": description_text, "Количество комментариев": amount_comments}
-
             logger.info(f'Информация о посте: {post_info}')
             writing_data_to_json_file(folder_path, folder_name, post_info)  # Записываем информацию в файл
             display_progress_bar(time_1=4, time_2=5)  # Выводим прогресс бар для процесса режима ожидания
@@ -227,9 +226,10 @@ def download_posts_from_the_page(browser) -> None:
 
 def main() -> None:
     """Основная функция"""
-    print('[red][1] - Парсинг постов со страницы\n'
-          '[red][2] - Скачать посты со страницы\n'
-          '[red][3]  - Скачать комментарии\n')
+    print(
+        '[red][1] - Парсинг постов со страницы\n'
+        '[red][2] - Скачать посты со страницы\n'
+    )
     user_input = input("Выбери действие ")
     if user_input == "1":
         parsing_posts_from_a_page()  # Парсинг постов со страницы сайта instagram
@@ -237,10 +237,6 @@ def main() -> None:
         browser = initialize_driver()  # Инициализация браузера
         authorization_instagram_mobile(browser)  # Авторизация
         download_posts_from_the_page(browser)  # Скачать посты в папку "downloaded_content" с названием поста
-    elif user_input == "3":
-        browser = initialize_driver()  # Инициализация браузера
-        authorization_instagram(browser)  # Авторизация
-        download_comments(browser)
 
 
 def sanitize_folder_name(folder_name):
