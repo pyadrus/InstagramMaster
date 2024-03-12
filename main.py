@@ -120,11 +120,11 @@ def parsing_posts_from_a_page() -> None:
     time.sleep(120)
 
 
-
-
 def download_posts_from_the_page(browser) -> None:
-    video_src = ('/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[1]/div/div/div/div/div/div/div/div/div/div/div/video')  # Видео пост
-    img_src = ("/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[1]/div/div/div/div/div/div/div[1]/div[1]")  # Пост изображение
+    video_src = (
+        '/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[1]/div/div/div/div/div/div/div/div/div/div/div/video')  # Видео пост
+    img_src = (
+        "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[1]/div/div/div/div/div/div/div[1]/div[1]")  # Пост изображение
 
     logger.info('Запуск скрипта по скачиванию постов')
     all_posts = get_instagram_posts()  # Запускаем скрипт для скачивания постов из базы данных.
@@ -223,9 +223,6 @@ def download_posts_from_the_page(browser) -> None:
                         download_image(posts, folder_path, f'{folder_name}_next{i - 1}.jpg')
             logger.info("Выключение браузера через 200 сек.")
             display_progress_bar(time_1=1, time_2=2)  # Выводим прогресс бар для процесса режима ожидания
-
-
-
 
 
 def main() -> None:
