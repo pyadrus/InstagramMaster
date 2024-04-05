@@ -9,3 +9,4 @@ def load_json(filename='google_c/client_secret_google.json'):
     with open(filename, 'r') as f:
         data = json.load(f)
     return data
+

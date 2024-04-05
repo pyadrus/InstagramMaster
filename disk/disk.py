@@ -1,13 +1,13 @@
 import yadisk  # https://yadisk.readthedocs.io/ru/latest/
 import requests
 
-from system.config import token
+from system.config import load_json_token
 
 
 def upload_file():
     endpoint = 'https://clck.ru/--'
 
-    client = yadisk.Client(token=token)
+    client = yadisk.Client(token=load_json_token())
 
     # Вы можете использовать либо конструкцию with, либо вручную вызвать client.close() в конце
     with client:

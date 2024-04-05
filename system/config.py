@@ -1,18 +1,91 @@
-username = "pyadminrus"
-password = "Donnasa2016"
-
-proxy_options = {'proxy': {'http': 'http://E7B66C:Gj7r3o@138.59.5.123:9802',
-                           'https': 'http://E7B66C:Gj7r3o@138.59.5.123:9802',
-                           'no_proxy': 'localhost:127.0.0.1'}}
-
-ClientID = "537235e4e6544f40930a2312a605861f"
-
-Client_secret = "564319eba85e4148a52a9bce511d9867"
-
-passw = 'voqsevqaauczqevr'
+import json
 
 
-token='y0_AgAAAAASr4-KAAtx6AAAAAD-NEvrAAAEhdZmvBxDXpUOF4gfiywF-HW9ng'
+def load_json_username(filename='system/instagram_username.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        username = json.load(f)
+    return username
 
 
-links = 'https://docs.google.com/spreadsheets/d/1HWQwwZZT0Ns9FbZako9yT2K8IqmTSnmdtbZEbNOylhs/edit?usp=sharing'
+def load_json_password(filename='system/instagram_password.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        password = json.load(f)
+    return password
+
+
+def load_json_proxy(filename='system/proxy.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        proxy = json.load(f)
+    return proxy
+
+
+def load_json_proxy_options(filename='system/proxy.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        proxy_options = json.load(f)
+    return proxy_options
+
+
+def load_json_ClientID(filename='system/clientid.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        ClientID = json.load(f)
+    return ClientID
+
+
+def load_json_token(filename='system/token.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        token = json.load(f)
+    return token
+
+
+def load_json_links(filename='system/links.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        links = json.load(f)
+    return links
+
+
+def load_json_Client_secret(filename='system/Client_secret.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        Client_secret = json.load(f)
+    return Client_secret
+
+
+def load_json_passw(filename='system/passw.json'):
+    """
+    Чтение json файла
+    :args filename: - путь до файла
+    """
+    with open(filename, 'r') as f:
+        passw = json.load(f)
+    return passw
