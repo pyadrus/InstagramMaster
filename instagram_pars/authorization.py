@@ -4,7 +4,7 @@ from loguru import logger
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
-from system.config import load_json_username, load_json_password
+from services.json_utils import load_json_username, load_json_password
 
 
 def authorization_instagram(browser):

@@ -1,7 +1,7 @@
 import yadisk  # https://yadisk.readthedocs.io/ru/latest/
 import requests
 
-from system.config import load_json_token
+from services.json_utils import load_json_token
 
 
 def upload_file():

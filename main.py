@@ -23,8 +23,8 @@ from instagram_pars.parsing_number_likes import parsing_number_likes
 from instagram_pars.parsing_post_descriptions import parsing_post_descriptions
 from instagram_pars.parsing_publication_date import parsing_publication_date
 from services.database import database_for_instagram_posts, removing_duplicates_from_the_database, get_instagram_posts
+from services.json_utils import load_json_proxy_options
 from services.working_with_files import download_image
-from system.config import load_json_proxy_options
 
 logger.add("log/log.log")
 

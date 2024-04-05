@@ -1,7 +1,6 @@
 import gspread  # https://docs.gspread.org/en/latest/user-guide.html
 
-from services.json_utils import load_json
-from system.config import load_json_links
+from services.json_utils import load_json, load_json_links
 
 
 def google_insta():
