@@ -1,0 +1,14 @@
+rich
+loguru
+instaloader
+selenium
+selenium-wire
+packaging
+setuptools
+beautifulsoup4
+lxml
+yadisk
+pyshorteners
+httplib2
+google-api-python-client
+oauth2client
