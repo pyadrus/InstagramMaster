@@ -3,8 +3,9 @@ from rich import print
 
 from disk.disk import upload_file
 from google_c.google_insta import google_insta
+from gui.gui import run
 from instagram_pars.authorization import authorization_instagram_mobile
-from instagram_pars.parsing_instagram import parsing_posts_from_a_page, download_posts_from_the_page
+from instagram_pars.parsing_instagram import parsing_posts_from_a_page, download_posts_from_the_page, initialize_driver
 
 logger.add("log/log.log")
 
@@ -36,12 +37,6 @@ logger.add("log/log.log")
 """
 
 
-
-
-
-
-
-
 def program_settings():
     pass
 
@@ -56,6 +51,7 @@ def download_reels_instagram():
 
 def main() -> None:
     """Основная функция"""
+    run()  # Тестовое графическое меню
     print(
         '[red][1] - Парсинг постов со страницы\n'
         '[red][2] - Парсинг reels со страницы\n'
@@ -82,9 +78,6 @@ def main() -> None:
         upload_file()
     elif user_input == "7":  # Настройки
         program_settings()
-
-
-
 
 
 if __name__ == '__main__':
