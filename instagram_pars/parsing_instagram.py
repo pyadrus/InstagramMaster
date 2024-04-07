@@ -9,9 +9,9 @@ import bs4
 from bs4 import BeautifulSoup
 from loguru import logger
 from rich.progress import track
+from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
-from seleniumwire import webdriver
 
 from instagram_pars.authorization import authorization_instagram
 from instagram_pars.download_video import download_from_instagram
@@ -20,7 +20,6 @@ from instagram_pars.parsing_number_likes import parsing_number_likes
 from instagram_pars.parsing_post_descriptions import parsing_post_descriptions
 from instagram_pars.parsing_publication_date import parsing_publication_date
 from services.database import database_for_instagram_posts, removing_duplicates_from_the_database, get_instagram_posts
-from services.json_utils import load_json_proxy_options
 from services.working_with_files import download_image
 
 
@@ -51,8 +50,7 @@ def display_progress_bar(time_1, time_2) -> None:
 
 def initialize_driver() -> webdriver:
     """Инициализация браузера"""
-    browser = webdriver.Chrome(seleniumwire_options=load_json_proxy_options())  # Открываем браузер
-
+    browser = webdriver.Chrome()  # Открываем браузер
     return browser
 
 
@@ -61,9 +59,9 @@ def parsing_posts_from_a_page() -> None:
     browser = initialize_driver()
     logger.info('Запуск браузера')
     authorization_instagram(browser)  # Авторизация
-    logger.info('Переходим на страницу профиля https://www.instagram.com/anji_kn/')
-    browser.get("https://www.instagram.com/anji_kn/")
-    time.sleep(5)
+    logger.info('Переходим на страницу профиля https://www.instagram.com/zingilevskiy/')
+    browser.get("https://www.instagram.com/zingilevskiy/")
+    time.sleep(2)
     # Ищем элемент, содержащий количество публикаций
     posts = browser.find_element(By.CLASS_NAME, 'html-span')
     logger.info(f'Всего публикаций у пользователя: {posts.text}')

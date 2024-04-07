@@ -1,11 +1,9 @@
 from loguru import logger
-from rich import print
 
 from disk.disk import upload_file
 from google_c.google_insta import google_insta
-from gui.gui import run
 from instagram_pars.authorization import authorization_instagram_mobile
-from instagram_pars.parsing_instagram import parsing_posts_from_a_page, download_posts_from_the_page, initialize_driver
+from instagram_pars.parsing_instagram import parsing_posts_from_a_page, initialize_driver, download_posts_from_the_page
 
 logger.add("log/log.log")
 
@@ -51,7 +49,7 @@ def download_reels_instagram():
 
 def main() -> None:
     """Основная функция"""
-    run()  # Тестовое графическое меню
+
     print(
         '[red][1] - Парсинг постов со страницы\n'
         '[red][2] - Парсинг reels со страницы\n'
