@@ -64,10 +64,12 @@ def parsing_posts_from_a_page() -> None:
     time.sleep(2)
     # Ищем элемент, содержащий количество публикаций
     posts = browser.find_element(By.CLASS_NAME, 'html-span')
-    logger.info(f'Всего публикаций у пользователя: {posts.text}')
+
     conn, cursor = database_for_instagram_posts()  # База данных для постов
-    number_of_posts = math.ceil(
-        int(posts.text) / 10)  # Считаем количество прокручиваний 382/10 = 38,2 (40 пролистываний)
+
+    post_counter = posts.text  # # Считаем количество постов
+    logger.info(f'Всего публикаций у пользователя: {post_counter}')
+    number_of_posts = math.ceil(int(post_counter.replace(' ', '')) / 10)  # Считаем количество прокручиваний 382/10 = 38,2 (40 пролистываний)
     logger.info(f'Количество пролистываний страницы {number_of_posts}')
     for _ in range(number_of_posts):
         # Скроллим страницу вниз
