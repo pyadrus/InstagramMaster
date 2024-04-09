@@ -54,18 +54,23 @@ def initialize_driver() -> webdriver:
     return browser
 
 
-def parsing_posts_from_a_page() -> None:
+def parsing_posts_from_a_page(link, table) -> None:
+    """
+    Парсинг страницы с постами
+    :arg link: ссылка на страницу профиля
+    :arg table: таблица, в которую будут записываться посты
+    """
     logger.info('Запуск скрипта')
     browser = initialize_driver()
     logger.info('Запуск браузера')
     authorization_instagram(browser)  # Авторизация
-    logger.info('Переходим на страницу профиля https://www.instagram.com/zingilevskiy/')
-    browser.get("https://www.instagram.com/zingilevskiy/")
+    logger.info(f'Переходим на страницу профиля {link}')
+    browser.get(f"{link}")
     time.sleep(2)
     # Ищем элемент, содержащий количество публикаций
     posts = browser.find_element(By.CLASS_NAME, 'html-span')
 
-    conn, cursor = database_for_instagram_posts()  # База данных для постов
+    conn, cursor = database_for_instagram_posts(table)  # База данных для постов
 
     post_counter = posts.text  # # Считаем количество постов
     logger.info(f'Всего публикаций у пользователя: {post_counter}')
@@ -97,14 +102,14 @@ def parsing_posts_from_a_page() -> None:
                 cursor.execute('INSERT INTO posts (post_url) VALUES (?)', (reel_url,))
             conn.commit()
 
-    removing_duplicates_from_the_database(cursor, conn)
+    removing_duplicates_from_the_database(cursor, conn, table)  # Удаляем дубликаты из базы данных
     logger.info('Скролл страницы завершен')
     time.sleep(120)
 
 
-def download_posts_from_the_page(browser) -> None:
+def download_posts_from_the_page(browser, table) -> None:
     logger.info('Запуск скрипта по скачиванию постов')
-    all_posts = get_instagram_posts()  # Запускаем скрипт для скачивания постов из базы данных.
+    all_posts = get_instagram_posts(table)  # Запускаем скрипт для скачивания постов из базы данных.
     for post in all_posts:
         url = post[0]  # Extract the string from the tuple
         logger.info(f'Скачиваем пост: {url}')
@@ -162,5 +167,4 @@ def download_posts_from_the_page(browser) -> None:
 
 
 if __name__ == '__main__':
-    parsing_posts_from_a_page()  # Запускаем скрипт для скачивания постов из базы данных
     initialize_driver()  # Запускаем браузер

@@ -61,20 +61,23 @@ def main() -> None:
     )
     user_input = input("Выбери действие ")
     if user_input == "1":  # Парсинг постов со страницы
-        parsing_posts_from_a_page()
+        parsing_posts_from_a_page(link="https://www.instagram.com/zingilevskiy/", table="posts")
     elif user_input == "2":  # Парсинг reels со страницы
+        parsing_posts_from_a_page(link="https://www.instagram.com/zingilevskiy/reels/", table="reels")
+    elif user_input == "3":  # Парсинг reels со страницы
         browser = initialize_driver()  # Инициализация браузера
         authorization_instagram_mobile(browser)  # Авторизация
-        download_posts_from_the_page(browser)  # Скачать посты в папку "downloaded_content" с названием поста
-    elif user_input == "3":  # Скачать посты instagram со страницы
+        download_posts_from_the_page(browser, table="posts")  # Скачать посты в папку "downloaded_content" с
+        # названием поста
+    elif user_input == "4":  # Скачать посты instagram со страницы
         download_post_instagram()
-    elif user_input == "4":  # Скачать reels instagram со страницы
+    elif user_input == "5":  # Скачать reels instagram со страницы
         download_reels_instagram()
-    elif user_input == "5":  # Запись в google
+    elif user_input == "6":  # Запись в google
         google_insta()
-    elif user_input == "6":  # Работа с Яндекс диском
+    elif user_input == "7":  # Работа с Яндекс диском
         upload_file()
-    elif user_input == "7":  # Настройки
+    elif user_input == "8":  # Настройки
         program_settings()
 
 
