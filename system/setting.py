@@ -1,71 +1,59 @@
 import configparser
 
 
-def update_config(username, password) -> None:
-    """
-    Обновление username и password instagram в файле config.ini.
-    :arg username: username instagram.
-    :arg password: password instagram.
-    """
-    config = configparser.ConfigParser()
-    config.read('system/config.ini')
+class ConfigManager:
+    def __init__(self, config_file='system/config.ini'):
+        self.config_file = config_file
 
-    if not config.has_section('instagram_username'):
-        config.add_section('instagram_username')
-    config.set('instagram_username', 'username', username)
+    def read_configs(self):
+        config = configparser.ConfigParser()
+        config.read(self.config_file)
+        return config
 
-    if not config.has_section('instagram_password'):
-        config.add_section('instagram_password')
-    config.set('instagram_password', 'password', password)
+    def write_config(self, config):
+        with open(self.config_file, 'w') as configfile:
+            config.write(configfile)
 
-    with open('system/config.ini', 'w') as configfile:
-        config.write(configfile)
+    def update_config(self, section, key, value):
+        config = self.read_configs()
 
+        if not config.has_section(section):
+            config.add_section(section)
+        config.set(section, key, value)
 
-def update_config_disk(token) -> None:
-    """
-    Обновление token в файле config.ini.
-    :arg token: token instagram.
-    """
-    config = configparser.ConfigParser()
-    config.read('system/config.ini')
-    if not config.has_section('yandex_disk_token'):
-        config.add_section('yandex_disk_token')
-    config.set('yandex_disk_token', 'token', token)
+        self.write_config(config)
 
-    with open('system/config.ini', 'w') as configfile:
-        config.write(configfile)
+    def update_instagram_credentials(self, username, password):
+        self.update_config('instagram', 'username', username)
+        self.update_config('instagram', 'password', password)
 
+    def update_yandex_disk_token(self, token):
+        self.update_config('yandex_disk', 'token', token)
 
-def update_config_disk_link(link) -> None:
-    """
-    Обновление link в файле config.ini.
-    :arg link: link instagram.
-    """
-    config = configparser.ConfigParser()
-    config.read('system/config.ini')
-    if not config.has_section('google_sheets_link'):
-        config.add_section('google_sheets_link')
-    config.set('google_sheets_link', 'link', link)
+    def update_google_sheets_link(self, link):
+        self.update_config('google_sheets', 'link', link)
 
 
 def program_settings():
     """Меню настроек программы"""
-    print('[1] Запись логина и пароля\n'
-          '[2] Запись токена Яндекс Диск\n'
-          '[3] Запись ссылки на Google Sheets\n')
+    config_manager = ConfigManager()
+    print(
+        '[1] Запись логина и пароля\n'
+        '[2] Запись токена Яндекс Диск\n'
+        '[3] Запись ссылки на Google Sheets\n'
+    )
 
     user_input = input('Выберите вариант: ')
     if user_input == '1':
         username = input("Введите новый username: ")
         password = input("Введите новый password: ")
-        update_config(username, password)
+        config_manager.update_instagram_credentials(username=username, password=password)
     elif user_input == '2':
         token = input("Введите новый токен: ")
-        update_config_disk(token)
+        config_manager.update_yandex_disk_token(token)
     elif user_input == '3':
         link = input("Введите ссылку на Google Sheets: ")
-        update_config_disk_link(link)
+        config_manager.update_google_sheets_link(link)
     else:
         print('Вы ввели неверный номер')
         program_settings()
