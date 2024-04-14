@@ -2,7 +2,7 @@ import json
 import configparser
 
 
-def load_json(filename='google_c/client_secret_google.json'):
+def load_json(filename='system/client_secret_google.json'):
     """
     Чтение json файла
     :args filename: - путь до файла

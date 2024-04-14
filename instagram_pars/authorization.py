@@ -4,7 +4,7 @@ from loguru import logger
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
-from services.json_utils import read_config
+from services.utils import read_config
 
 username, password = read_config()
 
