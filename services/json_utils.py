@@ -1,4 +1,5 @@
 import json
+import configparser
 
 
 def load_json(filename='google_c/client_secret_google.json'):
@@ -11,24 +12,14 @@ def load_json(filename='google_c/client_secret_google.json'):
     return data
 
 
-def load_json_username(filename='system/instagram_username.json'):
-    """
-    Чтение json файла
-    :args filename: - путь до файла
-    """
-    with open(filename, 'r') as f:
-        username = json.load(f)
-    return username
+def read_config():
+    config = configparser.ConfigParser()
+    config.read('system/config.ini')
 
+    username = config['instagram_username']['username']
+    password = config['instagram_password']['password']
 
-def load_json_password(filename='system/instagram_password.json'):
-    """
-    Чтение json файла
-    :args filename: - путь до файла
-    """
-    with open(filename, 'r') as f:
-        password = json.load(f)
-    return password
+    return username, password
 
 
 def load_json_token(filename='system/token.json'):
