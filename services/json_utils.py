@@ -30,11 +30,9 @@ def read_token():
     return token
 
 
-def load_json_links(filename='system/links.json'):
-    """
-    Чтение json файла
-    :args filename: - путь до файла
-    """
-    with open(filename, 'r') as f:
-        links = json.load(f)
+def read_links():
+    config = configparser.ConfigParser()
+    config.read('system/config.ini')
+    links = config['google_sheets_link']['links']
+
     return links
