@@ -1,13 +1,16 @@
 import yadisk  # https://yadisk.readthedocs.io/ru/latest/
 import requests
 
-from services.utils import read_token
+from system.setting import ConfigManager
+
+config_manager = ConfigManager()
+token = config_manager.read_yandex_disk_token()
 
 
 def upload_file():
     endpoint = 'https://clck.ru/--'
 
-    client = yadisk.Client(token=read_token())
+    client = yadisk.Client(token=token)
 
     # Вы можете использовать либо конструкцию with, либо вручную вызвать client.close() в конце
     with client:

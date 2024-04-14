@@ -4,9 +4,10 @@ from loguru import logger
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
-from services.utils import read_config
+from system.setting import ConfigManager
 
-username, password = read_config()
+config_manager = ConfigManager()
+username, password = config_manager.read_instagram_credentials()
 
 
 def authorization_instagram(browser):
