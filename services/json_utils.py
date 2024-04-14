@@ -22,13 +22,11 @@ def read_config():
     return username, password
 
 
-def load_json_token(filename='system/token.json'):
-    """
-    Чтение json файла
-    :args filename: - путь до файла
-    """
-    with open(filename, 'r') as f:
-        token = json.load(f)
+def read_token():
+    config = configparser.ConfigParser()
+    config.read('system/config.ini')
+    token = config['yandex_disk_token']['token']
+
     return token
 
 
