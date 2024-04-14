@@ -6,6 +6,8 @@ from instagram_pars.authorization import authorization_instagram_mobile
 from instagram_pars.parsing_instagram import parsing_posts_from_a_page, initialize_driver, download_posts_from_the_page
 from rich import print
 
+from system.setting import program_settings
+
 logger.add("log/log.log")
 
 """
@@ -36,10 +38,6 @@ logger.add("log/log.log")
 """
 
 
-def program_settings():
-    pass
-
-
 def download_post_instagram():
     pass
 
@@ -59,7 +57,7 @@ def main() -> None:
         '[red][4] - Скачать reels instagram со страницы\n'
         '[red][5] - Запись в google\n'
         '[red][6] - Работа с Яндекс диском\n'
-        '[red][7] - Настройки'
+        '[red][8] - Настройки'
     )
     user_input = input("Выбери действие: ")
     if user_input == "1":  # Парсинг постов со страницы
