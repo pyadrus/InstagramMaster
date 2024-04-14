@@ -14,7 +14,7 @@ def authorization_instagram(browser):
     ввод password (пароль)
     """
     browser.get("https://www.instagram.com/accounts/login/")
-    time.sleep(5)
+    time.sleep(20)
     username_input = browser.find_element(By.XPATH, '//*[@id="loginForm"]/div/div[1]/div/label/input')
     username_input.clear()
     logger.info(f'Запуск ввода логина: {load_json_username()}')

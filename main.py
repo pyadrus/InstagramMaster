@@ -4,6 +4,7 @@ from disk.disk import upload_file
 from google_c.google_insta import google_insta
 from instagram_pars.authorization import authorization_instagram_mobile
 from instagram_pars.parsing_instagram import parsing_posts_from_a_page, initialize_driver, download_posts_from_the_page
+from rich import print
 
 logger.add("log/log.log")
 
@@ -51,15 +52,16 @@ def main() -> None:
     """Основная функция"""
 
     print(
+        '[red]InstagramMaster v1.0\n\n'
         '[red][1] - Парсинг постов со страницы\n'
         '[red][2] - Парсинг reels со страницы\n'
         '[red][3] - Скачать посты instagram со страницы\n'
         '[red][4] - Скачать reels instagram со страницы\n'
         '[red][5] - Запись в google\n'
-        '[red][6] - Работа с Яндекс диском'
+        '[red][6] - Работа с Яндекс диском\n'
         '[red][7] - Настройки'
     )
-    user_input = input("Выбери действие ")
+    user_input = input("Выбери действие: ")
     if user_input == "1":  # Парсинг постов со страницы
         parsing_posts_from_a_page(link="https://www.instagram.com/zingilevskiy/", table="posts")
     elif user_input == "2":  # Парсинг reels со страницы

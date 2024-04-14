@@ -50,6 +50,10 @@ def display_progress_bar(time_1, time_2) -> None:
 
 def initialize_driver() -> webdriver:
     """Инициализация браузера"""
+    # Change the user-agent of the webdriver
+    # options = webdriver.ChromeOptions()
+    # options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3")
+    # Use the modified webdriver to log in to Instagram
     browser = webdriver.Chrome()  # Открываем браузер
     return browser
 
